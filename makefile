@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -I $(IDIR) `pkg-config --libs allegro-5 allegro_image-5 allegro_font-5 allegro_ttf-5`
+CFLAGS = -I $(IDIR) `pkg-config --libs allegro-5 allegro_image-5 allegro_font-5 allegro_ttf-5 allegro_primitives-5 allegro_main-5`
 
 IDIR = ./include/
 SRCDIR = ./src/
