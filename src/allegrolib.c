@@ -33,10 +33,32 @@ void al_draw_scaled(al_image image,int dx,int dy){
     al_draw_scaled_bitmap(image.bitmap,image.Rect.x,image.Rect.y,image.Rect.w,image.Rect.h,dx,dy,SCREEN_WIDTH,SCREEN_HEIGHT,0);
 }
 
-void al_draw_character(al_image image){
-    for(int i=0; i<4; i++){
-        al_draw_tinted_scaled_rotated_bitmap_region(image.bitmap,(10 + 105)*i,6,45,75,
-        al_map_rgb(255,255,255),0,0,140*(i+1 + 1*i),120,4,3.8,0,0);
+void al_draw_character(al_image image,int  si, int fi,int c,bool center){
+    int centered;
+    if(center){
+        switch(si){
+            case 0:
+                centered = 410;
+            break;
+            case 1:
+                centered = 130;
+            break;
+            case 2:
+                centered = -200;
+            break;
+            case 3:
+                centered = -430;
+            break;
+        }
+    }else{
+        centered = 0;
+    }
+    //draw(imagen,apuntador de imagen en X, apuntador de imagen en Y,w de imagen a imprimir,
+    //h de imagen a imprimir, color, rot X,rot Y, destino en X, destino en Y,Escala en X,
+    //Escala en Y,angulo ,banderas)
+    for(int i=si; i<fi; i++){
+        al_draw_tinted_scaled_rotated_bitmap_region(image.bitmap,(10 + 105)*i,6+(115 *c),45,75,
+        al_map_rgb(255,255,255),0,0,140*(i+1 + 1*i)+centered,120,4,3.8,0,0);
         //al_draw_bitmap_region(image.bitmap,(10 + 105)*i,6,45,75,140*(i+1),120,0);
     }
 }

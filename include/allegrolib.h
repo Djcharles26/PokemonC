@@ -31,7 +31,7 @@ extern al_image al_load_image(char *Path);
 
 extern void al_draw_scaled(al_image image,int dx,int dy);
 
-extern void al_draw_character(al_image image);
+extern void al_draw_character(al_image image, int si,int fi, int c, bool center);
 
 extern void allegro_start(ALLEGRO_DISPLAY **window);
 
