@@ -18,7 +18,13 @@ trainer ash;
 
 int main(void){
     pokeInfo pokemon[151];
+    int startAgain = 0;
+    printf("Hola main\n");
+    do{
     first(pokemon);
-    game(pokemon);
+    startAgain = game(pokemon);
+    printf("Game Restarting");
+    al_rest(2);
+    }while(startAgain == 1);
     return 0;
 }

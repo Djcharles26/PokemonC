@@ -36,8 +36,9 @@ typedef struct{
     int hp;//Start always with 100
     int lvl;
     int lvlToEvolve;
-    attack ataques[6];
+    attack ataques[4];
     al_image image;
+    int index;
 }pokeInfo;
 
 typedef struct{
@@ -45,6 +46,7 @@ typedef struct{
     int ch;
     int medallas;
     pokeInfo p[3];
+    int pokeQ;
     int lvl;
 }trainer;
 

@@ -16,6 +16,7 @@
 extern trainer ash;
 
 int first(pokeInfo pokemon[151]){
+    printf("Hola window");
     srand(time(NULL));
     ALLEGRO_DISPLAY *window;
     ALLEGRO_CONFIG *pokedex = al_load_config_file("./resources/pokemon.cfg");
@@ -23,13 +24,15 @@ int first(pokeInfo pokemon[151]){
         fprintf(stderr,"It couldnt charge all the pokemon data");
     }
     allegro_start(&window);
+    al_rest(1);
     int i,cnt=0;
     int pokemonGridPicker[9][16];
     for(i = 0; i<9; i++){
         for(int j=0; j<16; j++){
             pokemonGridPicker[i][j]=-1;
         }
-
+        printf("%d",i);
+        fflush(stdout);
     }
     int colorNumber = 0, selected = -1;
     coords pokSelected;
@@ -38,9 +41,25 @@ int first(pokeInfo pokemon[151]){
     float frameTime = 0,deltaTime = 1.0/60, delay = 0;
     bool running = true, isBlack = true,enter= false,draw = false, itChanged = false;
     bool chSelecting = false,naming = false;
+    attack commonAttacks[4];
+    strcpy(commonAttacks[0].name,"Tackle");
+    commonAttacks[0].damage = 20;
+    commonAttacks[0].accuracy = 40;
+    strcpy(commonAttacks[1].name,"Tail Whip");
+    commonAttacks[1].damage = 30;
+    commonAttacks[1].accuracy = 40;
+    strcpy(commonAttacks[2].name,"Growl");
+    commonAttacks[2].damage = 10;
+    commonAttacks[2].accuracy = 20;
+    strcpy(commonAttacks[3].name,"Ember");
+    commonAttacks[3].damage = 50;
+    commonAttacks[3].accuracy = 40;
     //trainer ash;
-    memset(&ash,0,sizeof(ash));
+    memset(&ash,0,sizeof(trainer));
+    fflush(stdout);
+    printf("I memseted ash\n");
     ash.lvl = 1;
+    ash.pokeQ = 3;
     ALLEGRO_EVENT_QUEUE *event_queue = NULL;//QUEUE EVENT
     ALLEGRO_FONT  *shade = NULL, *roboto1 =NULL, *NAME = NULL;//FONTS
     ALLEGRO_USTR *input = al_ustr_new("");//Text input
@@ -54,16 +73,24 @@ int first(pokeInfo pokemon[151]){
     al_image start,background,character,pok[151],menu;
     //pokeInfo pokemon[151];
     //Texture creations
+    fflush(stdout);
+    printf("Oola");
     start = al_load_image("./resources/Stadiumstart.jpg");
+    fflush(stdout);
+    printf("Hola created\n");
     background = al_load_image("./resources/psyBack.jpg");
+    fflush(stdout);
+    printf("Hola psyBack\n");
     character = al_load_image("./resources/trainer_sprites.png");
-    menu = al_load_image("./resources/MenuPokemon.png");
+    fflush(stdout);
+    printf("Hola trainer_sprites\n");
     char buffer[10];
     char aux[10];
     char dest[100];
     char *ptr;
-    for(int i = 1; i<10; i++){
+    for(int i = 1; i<152; i++){
         memset(dest,0,sizeof(dest));
+        fflush(stdin);
         sprintf(buffer,"%d.png",i);
         sprintf(aux,"%d",i);
         //printf("%s\n",buffer);
@@ -80,10 +107,14 @@ int first(pokeInfo pokemon[151]){
         pokemon[i-1].def = strtod(al_get_config_value(pokedex,aux,"def"),&ptr);
         pokemon[i-1].vel = strtod(al_get_config_value(pokedex,aux,"vel"),&ptr);
         pokemon[i-1].ac = strtod(al_get_config_value(pokedex,aux,"ac"),&ptr);
+        pokemon[i-1].index = i;
         pokemon[i-1].hp = 100;
         pokemon[i-1].lvl = 1;
         pokemon[i-1].isChoosed = false;
         pokemon[i-1].lvlToEvolve = pokemon[i-1].lvl + 20 + rand()%10;
+        for(int j = 0; j<4; j++){
+            pokemon[i-1].ataques[j] = commonAttacks[j];
+        }
     }
 
 
@@ -227,7 +258,7 @@ int first(pokeInfo pokemon[151]){
                 al_draw_text(shade,blackSteady,SCREEN_WIDTH/2-40,40,0,ash.name);
                 al_draw_text(shade,blackSteady,SCREEN_WIDTH/2-150,70,0,"CHOOSE 3 POKEMON");
                 int x=0,y=0,auxX=0,gray=0;
-                for(int i=0; i<9; i++){
+                for(int i=0; i<151; i++){
                     if(pokemon[i].isRoot){
                         pokemonGridPicker[y][x]=i;
                         if(pokemon[i].isChoosed){
@@ -252,25 +283,25 @@ int first(pokeInfo pokemon[151]){
                 al_draw_rectangle(120*pokSelected.x,130*pokSelected.y,
                 pokemon[auxX].image.Rect.w + (120*(x+1)),pokemon[auxX].image.Rect.h + (130*(y+1)),
                     al_map_rgb(45,100,241),8);
-                if(auxX<9 && pokemonGridPicker[pokSelected.y-1][pokSelected.x-1]!= -1){
-                    if(al_key_down(&keyState,ALLEGRO_KEY_RIGHT) && pokSelected.x <=8){
+                if(auxX<=151 && pokemonGridPicker[pokSelected.y-1][pokSelected.x-1]!= -1){
+                    if(al_key_down(&keyState,ALLEGRO_KEY_RIGHT) && pokSelected.x <=9){
                         printf("You pressed right\n");
                         pokSelected.x +=1;
-                        al_rest(.17);
+                        al_rest(.13);
                     }else if(al_key_down(&keyState,ALLEGRO_KEY_LEFT)&& pokSelected.x >=2){
                         printf("You pressed left\n");
                         pokSelected.x -=1;
-                        al_rest(.17);
+                        al_rest(.13);
                         //itChanged = true;
                     }else if(al_key_down(&keyState,ALLEGRO_KEY_UP) && pokSelected.y >=2){
                         printf("You pressed up\n");
                         pokSelected.y -=1;
-                        al_rest(.17);
+                        al_rest(.13);
                         //itChanged = true;
-                    }else if(al_key_down(&keyState,ALLEGRO_KEY_DOWN) && pokSelected.y <=5){
+                    }else if(al_key_down(&keyState,ALLEGRO_KEY_DOWN) && pokSelected.y <=2){
                         printf("You pressed down\n");
                         pokSelected.y +=1;
-                        al_rest(.17);
+                        al_rest(.13);
                         //itChanged = true;
                     }
                 }else{
@@ -281,27 +312,27 @@ int first(pokeInfo pokemon[151]){
                 al_draw_text(roboto1,blackSteady,130,590,0,"NAME:");
                 al_draw_text(roboto1,blackSteady,130,620,0,"TYPE:");
                 al_draw_text(roboto1,blackSteady,130,650,0,"ATTACK:");
-                al_draw_text(roboto1,blackSteady,630,590,0,"DEFENSE:");
-                al_draw_text(roboto1,blackSteady,630,620,0,"VELOCITY:");
-                al_draw_text(roboto1,blackSteady,630,650,0,"LEVEL:");
+                al_draw_text(roboto1,blackSteady,730,590,0,"DEFENSE:");
+                al_draw_text(roboto1,blackSteady,730,620,0,"VELOCITY:");
+                al_draw_text(roboto1,blackSteady,730,650,0,"LEVEL:");
                 al_draw_text(roboto1,blackSteady,330,590,0,pokemon[auxX].name);
                 al_draw_text(roboto1,blackSteady,330,620,0,pokemon[auxX].type);
                 char buff[10];
                 sprintf(buff,"%d",pokemon[auxX].at);
                 al_draw_text(roboto1,blackSteady,330,650,0,buff);
                 sprintf(buff,"%d",pokemon[auxX].def);
-                al_draw_text(roboto1,blackSteady,830,590,0,buff);
+                al_draw_text(roboto1,blackSteady,930,590,0,buff);
                 sprintf(buff,"%d",pokemon[auxX].vel);
-                al_draw_text(roboto1,blackSteady,830,620,0,buff);
+                al_draw_text(roboto1,blackSteady,930,620,0,buff);
                 sprintf(buff,"%d",pokemon[auxX].lvl);
-                al_draw_text(roboto1,blackSteady,830,650,0,buff);
+                al_draw_text(roboto1,blackSteady,930,650,0,buff);
                 al_draw_scaled_bitmap(pokemon[auxX].image.bitmap,0,0,pokemon[auxX].image.Rect.w,pokemon[auxX].image.Rect.h,1030,590,100,100,0);
                 if(al_key_down(&keyState,ALLEGRO_KEY_ENTER) && cnt<3 &&
                 !pokemon[auxX].isChoosed){
                     ash.p[cnt]= pokemon[auxX];
                     pokemon[auxX].isChoosed = true;
                     cnt++;
-                    al_rest(.3);
+                    al_rest(.17);
                 }
             }else{
                 al_clear_to_color(al_map_rgb(0,0,0));

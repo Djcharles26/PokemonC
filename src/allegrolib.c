@@ -23,6 +23,10 @@ void register_event_sources(ALLEGRO_DISPLAY *window,ALLEGRO_TIMER *timer, ALLEGR
 al_image al_load_image(char *Path){
     al_image image;
     image.bitmap = al_load_bitmap(Path);
+    if(!image.bitmap){
+        fflush(stdout);
+        printf("Cant load texture\n");
+    }
     image.Rect.x = image.Rect.y = 0;
     image.Rect.w = al_get_bitmap_width(image.bitmap);
     image.Rect.h = al_get_bitmap_height(image.bitmap);
